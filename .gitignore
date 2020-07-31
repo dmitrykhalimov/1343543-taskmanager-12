@@ -6,4 +6,16 @@
 *.webp binary
 *.woff binary
 *.woff2 binary
-node_modules
+
+Thumbs.db
+.DS_Store
+
+.idea
+*.sublime*
+.vscode
+
+*.log*
+node_modules/
+
+public/bundle.js
+public/budles.js.map
