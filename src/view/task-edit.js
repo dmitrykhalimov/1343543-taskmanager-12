@@ -1,18 +1,5 @@
-const isExpired = (dueDate) => {
-  if (dueDate === null) {
-    return false;
-  }
-
-  const currentDate = new Date();
-
-  currentDate.setHours(23, 59, 59, 999);
-
-  return currentDate > dueDate.getTime();
-};
-
-const isRepeating = (repeating) => {
-  return Object.values(repeating).some(Boolean);
-};
+import {COLORS} from "../const.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils.js";
 
 const createTaskEditDateTemplate = (dueDate) => {
   return `<button class="card__date-deadline-toggle" type="button">
@@ -25,7 +12,7 @@ const createTaskEditDateTemplate = (dueDate) => {
           type="text"
           placeholder=""
           name="date"
-          value="${dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`})}"
+          value="${humanizeTaskDueDate(dueDate)}"
         />
       </label>
     </fieldset>` : ``}
@@ -34,9 +21,9 @@ const createTaskEditDateTemplate = (dueDate) => {
 
 const createTaskEditRepeatingTemplate = (repeating) => {
   return `<button class="card__repeat-toggle" type="button">
-    repeat:<span class="card__repeat-status">${isRepeating(repeating) ? `yes` : `no`}</span>
+    repeat:<span class="card__repeat-status">${isTaskRepeating(repeating) ? `yes` : `no`}</span>
   </button>
-  ${isRepeating(repeating) ? `<fieldset class="card__repeat-days">
+  ${isTaskRepeating(repeating) ? `<fieldset class="card__repeat-days">
     <div class="card__repeat-days-inner">
       ${Object.entries(repeating).map(([day, repeat]) => `<input
         class="visually-hidden card__repeat-day-input"
@@ -46,11 +33,25 @@ const createTaskEditRepeatingTemplate = (repeating) => {
         value="${day}"
         ${repeat ? `checked` : ``}
       />
-      <label class="card__repeat-day" for="repeat-${day}"
-        >${day}</label
-      >`).join(``)}
+      <label class="card__repeat-day" for="repeat-${day}">${day}</label>`).join(``)}
     </div>
   </fieldset>` : ``}`;
+};
+
+const createTaskEditColorsTemplate = (currentColor) => {
+  return COLORS.map((color) => `<input
+    type="radio"
+    id="color-${color}"
+    class="card__color-input card__color-input--${color} visually-hidden"
+    name="color"
+    value="${color}"
+    ${currentColor === color ? `checked` : ``}
+  />
+  <label
+    for="color-${color}"
+    class="card__color card__color--${color}"
+    >${color}</label
+  >`).join(``);
 };
 
 export const createTaskEditTemplate = (task = {}) => {
@@ -68,16 +69,17 @@ export const createTaskEditTemplate = (task = {}) => {
       su: false
     }
   } = task;
-  const deadlineClassName = isExpired(dueDate)
+  const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
   const dateTemplate = createTaskEditDateTemplate(dueDate);
 
-  const repeatingClassName = isRepeating(repeating)
+  const repeatingClassName = isTaskRepeating(repeating)
     ? `card--repeat`
     : ``;
 
   const repeatingTemplate = createTaskEditRepeatingTemplate(repeating);
+  const colorsTemplate = createTaskEditColorsTemplate(color);
 
   return `<article class="card card--edit card--${color} ${deadlineClassName} ${repeatingClassName}">
         <form class="card__form" method="get">
@@ -105,67 +107,7 @@ export const createTaskEditTemplate = (task = {}) => {
               <div class="card__colors-inner">
                 <h3 class="card__colors-title">Color</h3>
                 <div class="card__colors-wrap">
-                  <input
-                    type="radio"
-                    id="color-black-4"
-                    class="card__color-input card__color-input--black visually-hidden"
-                    name="color"
-                    value="black"
-                  />
-                  <label
-                    for="color-black-4"
-                    class="card__color card__color--black"
-                    >black</label
-                  >
-                  <input
-                    type="radio"
-                    id="color-yellow-4"
-                    class="card__color-input card__color-input--yellow visually-hidden"
-                    name="color"
-                    value="yellow"
-                    checked
-                  />
-                  <label
-                    for="color-yellow-4"
-                    class="card__color card__color--yellow"
-                    >yellow</label
-                  >
-                  <input
-                    type="radio"
-                    id="color-blue-4"
-                    class="card__color-input card__color-input--blue visually-hidden"
-                    name="color"
-                    value="blue"
-                  />
-                  <label
-                    for="color-blue-4"
-                    class="card__color card__color--blue"
-                    >blue</label
-                  >
-                  <input
-                    type="radio"
-                    id="color-green-4"
-                    class="card__color-input card__color-input--green visually-hidden"
-                    name="color"
-                    value="green"
-                  />
-                  <label
-                    for="color-green-4"
-                    class="card__color card__color--green"
-                    >green</label
-                  >
-                  <input
-                    type="radio"
-                    id="color-pink-4"
-                    class="card__color-input card__color-input--pink visually-hidden"
-                    name="color"
-                    value="pink"
-                  />
-                  <label
-                    for="color-pink-4"
-                    class="card__color card__color--pink"
-                    >pink</label
-                  >
+                ${colorsTemplate}
                 </div>
               </div>
             </div>
