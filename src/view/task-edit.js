@@ -187,10 +187,7 @@ export default class TaskEdit extends SmartView {
     evt.preventDefault();
     this.updateData({
       isDueDate: !this._data.isDueDate,
-      // Логика следующая: если выбор даты нужно показать,
-      // то есть когда "!this._data.isDueDate === true",
-      // тогда isRepeating должно быть строго false,
-      // что достигается логическим оператором &&
+
       isRepeating: !this._data.isDueDate && false
     });
   }
@@ -199,7 +196,7 @@ export default class TaskEdit extends SmartView {
     evt.preventDefault();
     this.updateData({
       isRepeating: !this._data.isRepeating,
-      // Аналогично, но наоборот, для повторения
+
       isDueDate: !this._data.isRepeating && false
     });
   }
