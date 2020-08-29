@@ -1,8 +1,18 @@
+import moment from "moment";
+
 const getCurrentDate = () => {
   const currentDate = new Date();
   currentDate.setHours(23, 59, 59, 999);
 
   return new Date(currentDate);
+};
+
+export const formatTaskDueDate = (dueDate) => {
+  if (!(dueDate instanceof Date)) {
+    return ``;
+  }
+
+  return moment(dueDate).format(`D MMMM`);
 };
 
 export const isTaskExpired = (dueDate) => {
@@ -27,10 +37,6 @@ export const isTaskExpiringToday = (dueDate) => {
 
 export const isTaskRepeating = (repeating) => {
   return Object.values(repeating).some(Boolean);
-};
-
-export const humanizeTaskDueDate = (dueDate) => {
-  return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`});
 };
 
 const getWeightForNullDate = (dateA, dateB) => {
