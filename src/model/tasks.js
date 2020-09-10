@@ -6,8 +6,9 @@ export default class Tasks extends Observer {
     this._tasks = [];
   }
 
-  setTasks(tasks) {
+  setTasks(updateType, tasks) {
     this._tasks = tasks.slice();
+    this._notify(updateType);
   }
 
   getTasks() {
@@ -66,7 +67,6 @@ export default class Tasks extends Observer {
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedTask.due_date;
     delete adaptedTask.is_archived;
     delete adaptedTask.is_favorite;
@@ -87,7 +87,6 @@ export default class Tasks extends Observer {
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedTask.dueDate;
     delete adaptedTask.isArchive;
     delete adaptedTask.isFavorite;
