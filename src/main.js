@@ -24,7 +24,7 @@ const filterModel = new FilterModel();
 
 const siteMenuComponent = new SiteMenuView();
 
-const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
+const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel, api);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
 
 const handleTaskNewFormClose = () => {
@@ -56,19 +56,20 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-
-render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
-
 filterPresenter.init();
 boardPresenter.init();
 
-api.getTasks().then((tasks) => {
-  tasksModel.setTasks(UpdateType.INIT, tasks);
-})
-.catch(() => {
-  tasksModel.setTasks(UpdateType.INIT, []);
-});
+api.getTasks()
+  .then((tasks) => {
+    tasksModel.setTasks(UpdateType.INIT, tasks);
+    render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  })
+  .catch(() => {
+    tasksModel.setTasks(UpdateType.INIT, []);
+    render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  });
 
 document.querySelector(`#control__new-task`).addEventListener(`click`, (evt) => {
   evt.preventDefault();
