@@ -7,9 +7,13 @@ import FilterPresenter from "./presenter/filter.js";
 import TasksModel from "./model/tasks.js";
 import FilterModel from "./model/filter.js";
 import {render, RenderPosition, remove} from "./utils/render.js";
+import {getRandomString} from "./utils/common.js";
 import {MenuItem, UpdateType, FilterType} from "./const.js";
 
 import Api from "./api.js";
+const KEY_LENGTH = 12;
+
+// const AUTHORIZATION = `Basic ${getRandomString(KEY_LENGTH)}`;
 
 const AUTHORIZATION = `Basic hS2sd3dfSwcl1sa3j`;
 const END_POINT = `https://12.ecmascript.pages.academy/task-manager`;
